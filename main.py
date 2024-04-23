@@ -1,6 +1,5 @@
 import tkinter as interfaz #importamos la libreria para crear la interfaz 
 from tkinter import messagebox
-
 # Clase Usuario que va a interactuar con el sistema
 class Usuario:
     def __init__(self, nombre_usuario, contraseña, peso=0, altura=0): #metodo constructor de la clase usuario
@@ -200,10 +199,9 @@ class PaginaRutina:
 def main():
     ventana_principal=interfaz.Tk()
     pagina_bienvenida=PaginaBienvenida(ventana_principal)
-    ventana_principal.mainloop()
-    print(claves_usuarios.keys())
+    ventana_principal.mainloop()#mantiene la interfaz grafica abierta
 if __name__ == "__main__":
-    claves_usuarios = {
+    claves_usuarios = { #diccionario con usuarios "existentes" para validar en las pruebas de inicio de sesion
         "valentina": Usuario("valentina", "123", 48, 1.56),
         "juan": Usuario("juan", "juan123", 71, 1.77)
     }
