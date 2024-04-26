@@ -1,0 +1,434 @@
+import tkinter as interfaz
+from tkinter import messagebox
+
+class Usuario:
+    def __init__(self, nombre_usuario, contraseña, peso=0, altura=0):
+        self.nombre_usuario = nombre_usuario
+        self.contraseña = contraseña
+        self.peso = peso
+        self.altura = altura
+        self.meta = ""
+
+class PaginaBienvenida:
+    def __init__(self, ventana_principal):
+        self.ventana_principal = ventana_principal
+        self.ventana_principal.title("Bienvenido")
+        self.ventana_principal.geometry("3000x3000")
+
+        etiqueta = interfaz.Label(ventana_principal, text="¡Bienvenido a MINDFUL GAINS! 😄", font=("Comic Sans MS", 28), bg="#fcffea")
+        etiqueta.pack(pady=(50, 20))
+
+        texto_informativo = "En nuestro templo de salud aprenderás cómo sentirte mejor en tu cuerpo, estableciendo tus propios objetivos. Nuestras recomendaciones se adaptarán a tus objetivos, ofreciendo dietas y ejercicios ajustados a tu experiencia."
+        texto_label = interfaz.Label(ventana_principal, text=texto_informativo, font=("Arial", 16), wraplength=700, justify="center", bg="#fcffea")
+        texto_label.pack(pady=50, padx=50)
+
+        boton_aceptar = interfaz.Button(ventana_principal, text="Aceptar Términos y Condiciones", font=("Helvetica", 16), command=self.abrir_pagina_inicio, bg="#2980B9", fg="white")
+        boton_aceptar.pack(pady=20)
+
+        ventana_principal.configure(bg="#fcffea")
+
+    def abrir_pagina_inicio(self):
+        self.ventana_principal.destroy()
+        pagina_inicio = PaginaInicio()
+
+
+# Clase PaginaInicio
+class PaginaInicio:
+    def __init__(self):
+        self.ventana_principal = interfaz.Tk()
+        self.ventana_principal.title("Inicio de sesión")
+        self.ventana_principal.geometry("3000x3000")  # Tamaño ajustado a 3000x3000
+        self.ventana_principal.config(bg="#fcffea")  # Color de fondo
+
+        # Variables para guardar datos de usuario y contraseña
+        self.nombre_usuario = interfaz.StringVar()
+        self.contraseña = interfaz.StringVar()
+
+        # Creación de etiquetas y entradas con mejor formato
+        etiqueta_nombre = interfaz.Label(self.ventana_principal, text="Nombre de Usuario:", font=("Helvetica", 24), bg="#fcffea")  # Color de fondo
+        etiqueta_nombre.pack(pady=30)
+        entrada_nombre = interfaz.Entry(self.ventana_principal, textvariable=self.nombre_usuario, font=("Helvetica", 24))
+        entrada_nombre.pack(pady=10)
+
+        etiqueta_contraseña = interfaz.Label(self.ventana_principal, text="Contraseña:", font=("Helvetica", 24), bg="#fcffea")  # Color de fondo
+        etiqueta_contraseña.pack(pady=30)
+        entrada_contraseña = interfaz.Entry(self.ventana_principal, textvariable=self.contraseña, show="*", font=("Helvetica", 24))
+        entrada_contraseña.pack(pady=10)
+
+        # Botones de inicio de sesión y registro
+        boton_inicio = interfaz.Button(self.ventana_principal, text="Iniciar sesión", font=("Helvetica", 24), command=self.iniciar_sesion)
+        boton_inicio.pack(pady=50)
+
+        boton_registro = interfaz.Button(self.ventana_principal, text="Registrarse", font=("Helvetica", 24), command=self.abrir_pagina_registro)
+        boton_registro.pack(pady=30)
+
+    def iniciar_sesion(self):
+        nombre_usuario = self.nombre_usuario.get()
+        contraseña = self.contraseña.get()
+        if nombre_usuario in claves_usuarios:
+            if claves_usuarios[nombre_usuario].contraseña == contraseña:
+                messagebox.showinfo("Inicio de sesión", "¡Inicio de sesión exitoso!")
+                self.ventana_principal.destroy()
+                pagina_meta = PaginaMeta(claves_usuarios[nombre_usuario])
+            else:
+                messagebox.showerror("Inicio de sesión", "Contraseña incorrecta.")
+        else:
+            messagebox.showerror("Inicio de sesión", "Usuario no encontrado.")
+
+    def abrir_pagina_registro(self):
+        self.ventana_principal.destroy()
+        pagina_registro = PaginaRegistro()
+
+# Clase PaginaRegistro
+class PaginaRegistro:
+    def __init__(self):
+        self.ventana_principal = interfaz.Tk()
+        self.ventana_principal.title("Registro")
+        self.ventana_principal.geometry("3000x3000")  # Reducido el tamaño para que quepa en la pantalla
+        self.ventana_principal.config(bg="#fcffea")  # Color de fondo
+
+        # Variables para guardar datos de usuario y contraseña
+        self.nombre_usuario = interfaz.StringVar()
+        self.contraseña = interfaz.StringVar()
+        self.confirmar_contraseña = interfaz.StringVar()
+        self.peso = interfaz.StringVar(value="0.0")  # Establecer el valor predeterminado a "0.0"
+        self.altura = interfaz.StringVar(value="0.0")  # Establecer el valor predeterminado a "0.0"
+
+        # Etiquetas y entradas con tamaños reducidos
+        fuente_etiqueta = ("Helvetica", 16)
+        fuente_entrada = ("Helvetica", 16)
+
+        # Crear un marco (Frame) para agrupar los campos de identificación
+        frame_identificacion = interfaz.Frame(self.ventana_principal, bg="#fcffea")
+        frame_identificacion.pack(pady=20)
+
+        etiqueta_identificacion = interfaz.Label(frame_identificacion, text="Identificación", font=fuente_etiqueta,
+                                                 bg="#fcffea")
+        etiqueta_identificacion.grid(row=0, column=0, pady=10)
+
+        # Nombre de Usuario
+        etiqueta_nombre = interfaz.Label(frame_identificacion, text="Nombre de Usuario:", font=fuente_etiqueta,
+                                         bg="#fcffea")
+        etiqueta_nombre.grid(row=1, column=0, padx=10, pady=5)
+        entrada_nombre = interfaz.Entry(frame_identificacion, textvariable=self.nombre_usuario, font=fuente_entrada)
+        entrada_nombre.grid(row=1, column=1, padx=10, pady=5)
+
+        # Contraseña
+        etiqueta_contraseña = interfaz.Label(frame_identificacion, text="Contraseña:", font=fuente_etiqueta,
+                                             bg="#fcffea")
+        etiqueta_contraseña.grid(row=2, column=0, padx=10, pady=5)
+        entrada_contraseña = interfaz.Entry(frame_identificacion, textvariable=self.contraseña, show="*",
+                                            font=fuente_entrada)
+        entrada_contraseña.grid(row=2, column=1, padx=10, pady=5)
+
+        # Confirmar Contraseña
+        etiqueta_confirmar_contraseña = interfaz.Label(frame_identificacion, text="Confirmar Contraseña:",
+                                                       font=fuente_etiqueta, bg="#fcffea")
+        etiqueta_confirmar_contraseña.grid(row=3, column=0, padx=10, pady=5)
+        entrada_confirmar_contraseña = interfaz.Entry(frame_identificacion, textvariable=self.confirmar_contraseña,
+                                                      show="*", font=fuente_entrada)
+        entrada_confirmar_contraseña.grid(row=3, column=1, padx=10, pady=5)
+
+        # Crear un marco (Frame) para agrupar los campos de medidas corporales
+        frame_medidas = interfaz.Frame(self.ventana_principal, bg="#fcffea")
+        frame_medidas.pack(pady=20)
+
+        etiqueta_medidas = interfaz.Label(frame_medidas, text="Medidas Corporales", font=fuente_etiqueta, bg="#fcffea")
+        etiqueta_medidas.grid(row=0, column=0, pady=10)
+
+        # Peso
+        etiqueta_peso = interfaz.Label(frame_medidas, text="Peso (kg):", font=fuente_etiqueta, bg="#fcffea")
+        etiqueta_peso.grid(row=1, column=0, padx=10, pady=5)
+        entrada_peso = interfaz.Entry(frame_medidas, textvariable=self.peso, font=fuente_entrada)
+        entrada_peso.grid(row=1, column=1, padx=10, pady=5)
+
+        # Altura
+        etiqueta_altura = interfaz.Label(frame_medidas, text="Altura (m):", font=fuente_etiqueta, bg="#fcffea")
+        etiqueta_altura.grid(row=2, column=0, padx=10, pady=5)
+        entrada_altura = interfaz.Entry(frame_medidas, textvariable=self.altura, font=fuente_entrada)
+        entrada_altura.grid(row=2, column=1, padx=10, pady=5)
+
+        boton_registro = interfaz.Button(self.ventana_principal, text="Registrarse", font=("Helvetica", 16),
+                                         command=self.registrarse)
+        boton_registro.pack(pady=20)
+
+        # Botón para volver a la página de inicio de sesión
+        boton_volver = interfaz.Button(self.ventana_principal, text="Volver a inicio de sesión", font=("Helvetica", 16),
+                                       command=self.volver_a_inicio)
+        boton_volver.pack(pady=10)
+
+        # Configurar placeholders (texto transparente)
+        entrada_nombre.insert(0, "Nombre de Usuario")
+        entrada_nombre.config(fg="gray")
+        entrada_nombre.bind("<FocusIn>", lambda event: self.clear_entry(event, entrada_nombre))
+
+        entrada_contraseña.insert(0, "Contraseña")
+        entrada_contraseña.config(fg="gray")
+        entrada_contraseña.bind("<FocusIn>", lambda event: self.clear_entry(event, entrada_contraseña))
+
+        entrada_confirmar_contraseña.insert(0, "Contraseña")
+        entrada_confirmar_contraseña.config(fg="gray")
+        entrada_confirmar_contraseña.bind("<FocusIn>",
+                                          lambda event: self.clear_entry(event, entrada_confirmar_contraseña))
+
+        entrada_peso.config(fg="gray")
+        entrada_peso.bind("<FocusIn>", lambda event: self.clear_entry(event, entrada_peso))
+
+        entrada_altura.config(fg="gray")
+        entrada_altura.bind("<FocusIn>", lambda event: self.clear_entry(event, entrada_altura))
+#validamos el registro con un mensaje de confirmacion
+    def registrarse(self):
+        # Obtener los valores de los campos
+        nombre_usuario = self.nombre_usuario.get()
+        contraseña = self.contraseña.get()
+        confirmar_contraseña = self.confirmar_contraseña.get()
+        peso = self.peso.get()
+        altura = self.altura.get()
+
+        # Convertir las cadenas de texto de peso y altura a números
+        peso = float(self.peso.get())
+        altura = float(self.altura.get())
+
+        # Verificar que los campos no estén vacíos
+        if nombre_usuario.strip() == "" or contraseña.strip() == "" or confirmar_contraseña.strip() == "":
+            messagebox.showerror("Error", "El nombre de usuario y la contraseña no pueden estar vacíos.")
+            return
+
+        # Verificar que el peso y la altura sean mayores que cero
+        if peso <= 0 or altura <= 0:
+            messagebox.showerror("Error", "El peso y la altura deben ser mayores que cero.")
+            return
+
+        # Verificar que las contraseñas coincidan
+        if contraseña != confirmar_contraseña:
+            messagebox.showerror("Error", "Las contraseñas no coinciden.")
+            return
+
+        # Crear un nuevo usuario y agregarlo al diccionario de usuarios
+        nuevo_usuario = Usuario(nombre_usuario, contraseña, peso, altura)
+        claves_usuarios[nombre_usuario] = nuevo_usuario
+
+        # Mostrar mensaje de registro exitoso
+        messagebox.showinfo("Registro", "¡Registro exitoso!")
+
+        # Cerrar la ventana actual y abrir la página de meta
+        self.ventana_principal.destroy()
+        pagina_meta = PaginaMeta(nuevo_usuario)
+
+    def clear_entry(self, event, entry):
+        # Función para limpiar el entry cuando se hace clic en él
+        if entry.cget("fg") == "gray":
+            entry.delete(0, "end")
+            entry.config(fg="black")
+    def volver_a_inicio(self):
+        # Cerrar la ventana actual y abrir la página de inicio de sesión
+        self.ventana_principal.destroy()
+        pagina_inicio = PaginaInicio()
+# Clase PaginaMeta
+class PaginaMeta:
+    def __init__(self, usuario):
+        self.usuario = usuario
+        self.ventana_principal = interfaz.Tk()
+        self.ventana_principal.title("Cuál es tu meta")
+        self.ventana_principal.geometry("3000x3000")
+
+        # Configuración del color de fondo y fuente
+        self.ventana_principal.configure(bg="#fcffea")
+        fuente_etiqueta = ("Arial", 36)
+        fuente_botones = ("Helvetica", 24)
+
+        # Espacio en blanco arriba
+        etiqueta_vacio = interfaz.Label(self.ventana_principal, text="", bg="#fcffea")
+        etiqueta_vacio.pack(pady=50)
+
+        # Etiqueta de selección de meta
+        etiqueta = interfaz.Label(self.ventana_principal, text="Selecciona tu meta de fitness:", font=fuente_etiqueta, bg="#fcffea")
+        etiqueta.pack()
+
+        # Espacio entre la etiqueta y los botones
+        etiqueta_espacio = interfaz.Label(self.ventana_principal, text="", bg="#fcffea")
+        etiqueta_espacio.pack(pady=100)
+
+        # Botones para seleccionar la meta
+        metas = ["Bajar de peso", "Subir de peso", "Aumentar masa muscular", "Aumentar fuerza"]
+        for meta in metas:
+            boton = interfaz.Button(self.ventana_principal, text=meta, font=fuente_botones, command=lambda m=meta: self.abrir_pagina_siguiente(m), bg="#BFBFBF", fg="#000000", width=20)
+            boton.pack()
+
+    # Método para pasar a la siguiente página (DietaOrutina)
+    def abrir_pagina_siguiente(self, meta):
+        self.usuario.meta = meta
+        self.ventana_principal.destroy()
+        pagina_dieta_o_rutina = DietaOrutina(self.usuario)
+
+# Clase DietaOrutina
+class DietaOrutina:
+    def __init__(self, usuario):
+        self.usuario = usuario
+        self.ventana_principal = interfaz.Tk()
+        self.ventana_principal.title("Dieta o Rutina")
+        self.ventana_principal.geometry("3000x3000")
+
+        # Configuración del color de fondo y fuente
+        self.ventana_principal.configure(bg="#fcffea")
+        fuente_titulo = ("Arial", 36)
+        fuente_botones = ("Helvetica", 24)
+
+        # Espacio en blanco arriba
+        etiqueta_vacio = interfaz.Label(self.ventana_principal, text="", bg="#fcffea")
+        etiqueta_vacio.pack(pady=100)
+
+        # Título
+        etiqueta_titulo = interfaz.Label(self.ventana_principal, text="¿Qué deseas ver?", font=fuente_titulo, bg="#fcffea")
+        etiqueta_titulo.pack()
+
+        # Espacio entre el título y los botones
+        etiqueta_espacio = interfaz.Label(self.ventana_principal, text="", bg="#fcffea")
+        etiqueta_espacio.pack(pady=100)
+
+        # Botones para seleccionar dieta o rutina
+        boton_dieta = interfaz.Button(self.ventana_principal, text="Dieta", font=fuente_botones, command=self.abrir_pagina_dieta, bg="#BFBFBF", fg="#000000", width=15)
+        boton_dieta.pack()
+
+        boton_rutina = interfaz.Button(self.ventana_principal, text="Rutina", font=fuente_botones, command=self.abrir_pagina_rutina, bg="#BFBFBF", fg="#000000", width=15)
+        boton_rutina.pack()
+
+        # Espacio entre los botones
+        etiqueta_espacio = interfaz.Label(self.ventana_principal, text="", bg="#fcffea")
+        etiqueta_espacio.pack(pady=10)
+
+        # Botón para volver a la página anterior (PaginaMeta)
+        boton_volver = interfaz.Button(self.ventana_principal, text="Volver", font=fuente_botones, command=self.volver_a_pagina_meta, bg="#BFBFBF", fg="#000000", width=20)
+        boton_volver.pack()
+
+    def abrir_pagina_dieta(self):
+        self.ventana_principal.destroy()
+        pagina_dieta = PaginaDieta(self.usuario)
+
+    def abrir_pagina_rutina(self):
+        self.ventana_principal.destroy()
+        pagina_rutina = PaginaRutina(self.usuario)
+
+    def volver_a_pagina_meta(self):
+        self.ventana_principal.destroy()
+        pagina_meta = PaginaMeta(self.usuario)
+# Clase PaginaDieta
+class PaginaDieta:
+#creamos el mensaje base
+    def __init__(self, usuario):
+        self.usuario = usuario
+        self.ventana_principal = interfaz.Tk()
+        self.ventana_principal.title("Dieta Personalizada")
+        self.ventana_principal.geometry("3000x3000")
+
+        # Agregamos un color de fondo suave
+        self.ventana_principal.configure(bg="#fcffea")
+
+        # Espacio en blanco arriba
+        etiqueta_vacio = interfaz.Label(self.ventana_principal, text="", bg="#fcffea")
+        etiqueta_vacio.pack(pady=100)
+
+        etiqueta = interfaz.Label(self.ventana_principal,
+                                  text=f"Dieta personalizada para {self.usuario.nombre_usuario} para el objetivo de {self.usuario.meta}",
+                                  font=("Arial", 30), bg="#fcffea", fg="#000000")
+        etiqueta.pack()
+
+        # Espacio en blanco entre la etiqueta y el mensaje
+        etiqueta_espacio = interfaz.Label(self.ventana_principal, text="", bg="#fcffea")
+        etiqueta_espacio.pack(pady=50)
+
+        mensaje = self.obtener_mensaje_dieta()
+        etiqueta_mensaje = interfaz.Text(self.ventana_principal, wrap="word", width=100, height=len(mensaje)//50 + 1,
+                                         font=("Helvetica", 18), bg="#fcffea", fg="#000000")
+        etiqueta_mensaje.insert("1.0", mensaje)
+        etiqueta_mensaje.config(state="disabled")
+        etiqueta_mensaje.pack()
+
+        # Espacio en blanco entre el mensaje y el botón
+        etiqueta_espacio_2 = interfaz.Label(self.ventana_principal, text="", bg="#fcffea")
+        etiqueta_espacio_2.pack(pady=75)
+
+        boton_volver = interfaz.Button(self.ventana_principal, text="Revisar la rutina personalizada",
+                                       font=("Helvetica", 18), command=self.volver_a_dieta_orutina, bg="#BFBFBF",
+                                       fg="#000000")
+        boton_volver.pack()
+
+#se obtiene el mensaje personalizado
+    def obtener_mensaje_dieta(self):
+        if self.usuario.meta=="Bajar de peso":
+            return "Prioriza alimentos integrales, vegetales, proteínas magras y controla las porciones. Evita alimentos procesados y azúcares refinados. Bebe agua y haz ejercicio regularmente."
+        elif self.usuario.meta=="Subir de peso":
+            return "Incrementa el consumo de calorías saludables como nueces, aguacate, y carbohidratos complejos. Incluye proteínas magras y realiza ejercicios de fuerza para ganar masa muscular."
+        elif self.usuario.meta=="Aumentar masa muscular":
+            return "Consume suficientes proteínas de calidad, carbohidratos complejos y grasas saludables. Realiza entrenamiento de fuerza con progresión gradual y descanso adecuado para permitir la recuperación muscular."
+        elif self.usuario.meta== "Aumentar fuerza":
+            return "Prioriza proteínas para la reparación muscular, carbohidratos para la energía y grasas saludables para el funcionamiento óptimo del cuerpo. Realiza ejercicios compuestos como sentadillas, peso muerto y press de banca, incrementando gradualmente la carga."
+        else:
+            return "Meta no reconocida."
+    def volver_a_dieta_orutina(self):
+        self.ventana_principal.destroy()  # Destruye la ventana actual
+        dieta_orutina = DietaOrutina(self.usuario)  # Vuelve a la página DietaOrutina
+
+# Clase PaginaRutina
+class PaginaRutina:
+#creamos el mensaje base con los datos base
+    def __init__(self, usuario):
+        self.usuario = usuario
+        self.ventana_principal = interfaz.Tk()
+        self.ventana_principal.title("Rutina Personalizada")
+        self.ventana_principal.geometry("3000x3000")
+
+        # Agregamos un color de fondo suave
+        self.ventana_principal.configure(bg="#fcffea")
+
+        # Espacio en blanco arriba
+        etiqueta_vacio = interfaz.Label(self.ventana_principal, text="", bg="#fcffea")
+        etiqueta_vacio.pack(pady=100)
+
+        etiqueta = interfaz.Label(self.ventana_principal, text=f"Rutina personalizada para {self.usuario.nombre_usuario} para el objetivo de {self.usuario.meta}",
+                                  font=("Arial", 30), bg="#fcffea", fg="#000000")
+        etiqueta.pack()
+
+        # Espacio en blanco entre la etiqueta y el mensaje
+        etiqueta_espacio = interfaz.Label(self.ventana_principal, text="", bg="#fcffea")
+        etiqueta_espacio.pack(pady=50)
+
+        mensaje = self.obtener_mensaje_rutina()
+        etiqueta_mensaje = interfaz.Text(self.ventana_principal, wrap="word", width=100, height=len(mensaje) // 50 + 1,
+                                         font=("Helvetica", 18), bg="#fcffea", fg="#000000")
+        etiqueta_mensaje.insert("1.0", mensaje)
+        etiqueta_mensaje.config(state="disabled")
+        etiqueta_mensaje.pack()
+
+        # Espacio en blanco entre el mensaje y el botón
+        etiqueta_espacio_2 = interfaz.Label(self.ventana_principal, text="", bg="#fcffea")
+        etiqueta_espacio_2.pack(pady=75)
+
+        boton_volver = interfaz.Button(self.ventana_principal, text="Revisar la dieta personalizada", font=("Helvetica", 18), command=self.volver_a_dieta_orutina, bg="#BFBFBF", fg="#000000")
+        boton_volver.pack()
+#damos la rutina personalizada
+    def obtener_mensaje_rutina(self):
+        if self.usuario.meta=="Bajar de peso":
+            return "Cardio (caminata rápida/correr) - 4 sets de 20 minutos. Entrenamiento de fuerza (peso corporal/pesas ligeras) - 3 sets de 12-15 repeticiones."
+        elif self.usuario.meta=="Subir de peso":
+            return "Entrenamiento de fuerza (pesas) - 4-5 sets de 6-8 repeticiones. Ejercicios compuestos (sentadillas, press de banca, peso muerto)."
+        elif self.usuario.meta=="Aumentar masa muscular":
+            return "Entrenamiento de fuerza (pesas) - 4 sets de 8-12 repeticiones. Enfoque en ejercicios multiarticulares (sentadillas, dominadas, press de banca)."
+        elif self.usuario.meta=="Aumentar fuerza":
+            return "Entrenamiento de fuerza (pesas) - 4 sets de 8-12 repeticiones. Enfoque en ejercicios multiarticulares (sentadillas, dominadas, press de banca)."
+        else:
+            return "Meta no reconocida."
+    def volver_a_dieta_orutina(self):
+        self.ventana_principal.destroy()  # Destruye la ventana actual
+        dieta_orutina = DietaOrutina(self.usuario)  # Vuelve a la página DietaOrutina
+#invocamos el main para que el archivo se ejcutew
+def main():
+    ventana_principal=interfaz.Tk()
+    pagina_bienvenida=PaginaBienvenida(ventana_principal)
+    ventana_principal.mainloop()#mantiene la interfaz grafica abierta
+if __name__ == "__main__":
+    claves_usuarios = { #diccionario con usuarios "existentes" para validar en las pruebas de inicio de sesion
+        "valentina": Usuario("valentina", "123", 48, 1.56),
+        "juan": Usuario("juan", "juan123", 71, 1.77)
+    }
+    main()
